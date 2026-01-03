@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shweta Sarthy | Novelist</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='32' fill='%23333333'/><path d='M32 12 L42 42 L32 52 L22 42 Z' fill='white'/><rect x='31' y='42' width='2' height='10' fill='%23333333'/></svg>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-body: #ffffff;
+            --bg-sidebar: #f4f1ea;
+            --bg-card: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border-color: #dddddd;
+            --accent-color: #333333;
+            --btn-text: #ffffff;
+            --btn-hover: #555555;
+            --shadow: rgba(0,0,0,0.1);
+        }
+        body.dark-mode {
+            --bg-body: #121212;
+            --bg-sidebar: #1e1e1e;
+            --bg-card: #1e1e1e;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --border-color: #333333;
+            --accent-color: #ffffff;
+            --btn-text: #121212;
+            --btn-hover: #cccccc;
+            --shadow: rgba(0,0,0,0.5);
+        }
+        * { box-sizing: border-box; transition: background-color 0.3s, color 0.3s; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Georgia', serif; 
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+            line-height: 1.6;
+            background-color: var(--bg-body);
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+        .sidebar {
+            flex: 1; 
+            background-color: var(--bg-sidebar); 
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border-right: 1px solid var(--border-color);
+            height: 100vh; 
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .hamburger {
+            display: none;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 4px solid var(--bg-card);
+            box-shadow: 0 4px 10px var(--shadow);
+            background-color: #ddd;
+        }
+        h1 { font-size: 28px; margin: 0 0 5px 0; color: var(--text-main); }
+        .tagline {
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .nav-menu {
+            width: 100%;
+            max-width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        .nav-btn {
+            display: block;
+            padding: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            border-radius: 4px;
+            cursor: pointer; 
+            font-weight: bold;
+            font-family: sans-serif;
+        }
+        .nav-btn:hover {
+            background: var(--accent-color);
+            color: var(--bg-body);
+            border-color: var(--accent-color);
+        }
+        .social-links { margin-top: auto; }
+        .social-links a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        .social-links a:hover { color: var(--accent-color); }
+        .content {
+            flex: 1.8; 
+            padding: 60px 80px;
+            background-color: var(--bg-body);
+            height: 100vh;
+            overflow-y: auto; 
+        }
+        .tab-content { display: none; animation: fadeIn 0.5s; }
+        .active-tab { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h2 { 
+            border-bottom: 2px solid var(--bg-sidebar); 
+            padding-bottom: 15px; 
+            margin-top: 0;
+            text-transform: uppercase;
+            font-size: 16px;
+            letter-spacing: 2px;
+            color: var(--text-main);
+        }
+        .library-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--bg-sidebar);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        .library-header h2 { border: none; padding: 0; margin: 0; }
+        .book-card {
+            display: flex;
+            gap: 25px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        .featured-card {
+            border: 2px solid var(--accent-color) !important;
+        }
+        .book-cover {
+            width: 120px;
+            height: 180px;
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            flex-shrink: 0;
+            font-size: 12px;
+            box-shadow: 2px 4px 10px var(--shadow);
+        }
+        h3 { color: var(--text-main); margin-top: 0; }
+        p { color: var(--text-muted); }
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: var(--bg-body);
+            padding: 12px 24px;
+            text-decoration: none;
+            font-size: 12px;
+            font-family: sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: 0.3s;
+            cursor: pointer;
+            border: 1px solid var(--accent-color);
+        }
+        .btn:hover { 
+            opacity: 0.8;
+        }
+        .btn-outline {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--text-main);
+        }
+        .btn-outline:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-body);
+        }
+        .buy-buttons {
+            display: flex; 
+            gap: 10px; 
+            flex-wrap: wrap; 
+            margin-top: 15px;
+        }
+        .review-box {
+            background: var(--bg-sidebar);
+            padding: 30px;
+            border-left: 5px solid var(--accent-color);
+            margin-bottom: 25px;
+            font-style: italic;
+            color: var(--text-muted);
+        }
+        .reviewer-name {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            font-style: normal;
+            font-size: 13px;
+            color: var(--text-main);
+            text-transform: uppercase;
+        }
+        .new-badge {
+            background: var(--accent-color);
+            color: var(--bg-body);
+            padding: 4px 8px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        @media (max-width: 768px) {
+            .container { flex-direction: column; }
+            .sidebar { 
+                height: auto; 
+                padding: 60px 20px 40px 20px; 
+                border-right: none; 
+                border-bottom: 1px solid var(--border-color); 
+                position: relative;
+            }
+            .hamburger { 
+                display: flex;
+                position: fixed; 
+                top: 15px; 
+                right: 15px; 
+                z-index: 1000;
+                background-color: var(--bg-sidebar);
+                box-shadow: 0 2px 10px var(--shadow);
+            }
+            .theme-toggle {
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                z-index: 1000;
+                background-color: var(--bg-sidebar);
+                box-shadow: 0 2px 10px var(--shadow);
+            }
+            .nav-menu { 
+                display: flex; 
+                width: 100%; 
+                margin-top: 20px; 
+            }
+            .content { padding: 40px 20px; height: auto; overflow: visible;}
+            .book-card { flex-direction: column; align-items: center; text-align: center; }
+            .library-header { flex-direction: column; gap: 15px; text-align: center; }
+            .buy-buttons { justify-content: center; width: 100%; }
+            .book-cover { margin-bottom: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">  
+        <div class="sidebar">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                <i class="fa-solid fa-moon" id="theme-icon"></i>
+            </button>
+            <button class="hamburger" onclick="toggleMenu()" title="Back to Top">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <img src="Profile.jpg" alt="Author Photo" class="profile-img">
+            <h1>Shweta Sarthy</h1>
+            <p class="tagline">Turning shadows into creative fire.</p>
+            <nav class="nav-menu" id="nav-menu">
+                <button class="nav-btn" onclick="openTab('home')">About</button> 
+                <button class="nav-btn" onclick="openTab('books')">Books</button>
+                <button class="nav-btn" onclick="openTab('reviews')">Reviews</button>
+            </nav>
+            <div class="social-links">
+                <a href="https://instagram.com/theshwetasarthy" target="_blank" title="Instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="https://x.com/shweta_sarthy" target="_blank" title="X">
+                    <i class="fa-brands fa-x-twitter"></i>
+                </a>
+                <a href="mailto:theshwetasarthy@gmail.com" title="Email Me">
+                    <i class="fa-solid fa-envelope"></i>
+                </a>
+            </div>
+        </div>
+        <div class="content">
+            <div id="home" class="tab-content active-tab">
+                <h2>Latest Release</h2>
+                <div class="book-card featured-card"> 
+                    <img src="The Battle Of Touch.png" alt="Book Cover" class="book-cover">
+                    <div style="text-align: left; width: 100%;">
+                        <span class="new-badge">New Release</span>
+                        <h3 style="margin-top: 15px; font-size: 24px;">The Battle of Touch</h3>
+                        <p>When Love Becomes Her Fiercest Weapon (Novel)</p>
+                        <div class="buy-buttons">
+                            <a href="https://www.amazon.in/dp/B0GCZPKLJV" target="_blank" class="btn btn-outline" style="flex: 1; text-align: center;">
+                                India
+                            </a>
+                            <a href="https://www.amazon.com/dp/B0GCZPKLJV" target="_blank" class="btn btn-outline" style="flex: 1; text-align: center;">
+                                International
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 60px; border-top: 1px solid var(--border-color); padding-top: 40px;">
+                    <h2 style="border:none; letter-spacing: 1px;">About</h2>
+                    <p>
+                        Shweta Sarthy is an Indian novelist whose work serves as a bridge between the silence of 
+                        healing and the roar of self-discovery. Her writing doesn't just tell stories; it maps the 
+                        emotional geography of women who have been tested by life and emerged as architects of their own fate.
+                    </p>
+                    <p>
+                        From her roots in the heart of Madhya Pradesh to her current academic journey in Tamil Nadu, 
+                        Shweta's evolution as a writer is deeply personal. Her transition from the depths of depression 
+                        to a life anchored in self-love forms the visceral "heartbeat" of her prose. It is this lived 
+                        experience that allows her to write with a "messy honesty" capturing the grit and grace of the human condition.
+                    </p>
+                    <div style="margin: 30px 0; padding: 20px; border-left: 2px solid var(--accent-color);">
+                        <p style="font-size: 1.2rem; font-family: 'Playfair Display', serif; margin: 0; font-style: italic;">
+                            I believe a woman is the supreme power of the universe: delicate enough to feel every 
+                            shadow, yet far too resilient to be broken. When she is nourished by love, she becomes 
+                            a force that can conquer any world.
+                        </p>
+                    </div>
+                    <p>
+                        Following the lyrical exploration of <em>Dread of Love</em> and the poignant debut of 
+                        <em>Rose Beneath the Soil</em>, her latest work, <strong>The Battle of Touch</strong>, stands 
+                        as her most intimate project to date; an invitation to witness the ultimate strength found in vulnerability.
+                    </p>
+                    <br>
+                    <p>For inquiries, collaborations, or just to say hi<br> 
+                        <a href="mailto:theshwetasarthy@gmail.com" style="color: var(--text-main); font-weight: bold;">theshwetasarthy@gmail.com</a>
+                    </p>
+                </div>
+            </div>
+            <div id="books" class="tab-content">
+                <div class="library-header">
+                    <h2>My Book Library</h2>
+                </div>
+                <div class="book-card">
+                    <img src="The Battle Of Touch.png" alt="Book Cover" class="book-cover">
+                    <div style="width: 100%;">
+                        <h3>The Battle of Touch (Recent)</h3>
+                        <p>When Love Becomes Her Fiercest Weapon (Novel)</p>
+                        <div class="buy-buttons">
+                            <a href="https://www.amazon.in/dp/B0GCZPKLJV" target="_blank" class="btn btn-outline" style="flex: 1; text-align: center;">India</a>
+                            <a href="https://www.amazon.com/dp/B0GCZPKLJV" target="_blank" class="btn btn-outline" style="flex: 1; text-align: center;">International</a>
+                        </div>
+                    </div>
+                </div>                
+                <div class="book-card">
+                    <img src="Rose Beneath the Soil.png" alt="Book Cover" class="book-cover">
+                    <div style="width: 100%;">
+                        <h3>Rose Beneath The Soil (2023)</h3>
+                        <p>Even the brightest of stars are engulfed when the darkness sets... (Debut Novel)</p>
+                        <div class="buy-buttons">
+                            <a href="https://www.amazon.in/dp/B0C62M9NY9" target="_blank" class="btn btn-outline" style="flex: 1; text-align: center;">India</a>
+                            <a href="https://www.amazon.com/dp/B0C62M9NY9" target="_blank" class="btn btn-outline" style="flex: 1; text-align: center;">International</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="book-card">
+                    <img src="Dread of Love.jpeg" alt="Book Cover" class="book-cover">
+                    <div style="width: 100%;">
+                        <h3>Dread of Love (2022)</h3>
+                        <p>Love is beautiful and so is it's pain (Anthology)</p>                      
+                        <div class="buy-buttons">
+                            <a href="https://www.amazon.in/dp/B09W5Z9GYJ" target="_blank" class="btn btn-outline" style="flex: 1; text-align: center;">India</a>
+                            <a href="https://www.amazon.com/dp/B09W5Z9GYJ" target="_blank" class="btn btn-outline" style="flex: 1; text-align: center;">International</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="reviews" class="tab-content">
+                <h2>What Readers Say</h2>                
+                <div class="review-box">
+                    "I literally could not put this book down. The twist at the end changed my life!"
+                    <span class="reviewer-name">- Sarah T, Goodreads</span>
+                </div>
+                <div class="review-box">
+                    "Jane Doe is a master of suspense. Highly recommended for fans of classic mystery."
+                    <span class="reviewer-name">- The Book Monthly</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function openTab(tabName) {
+            var target = document.getElementById(tabName);
+            if (window.getComputedStyle(target).display === 'block') {
+                return;
+            }
+            var i, tabContent;
+            tabContent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabContent.length; i++) {
+                tabContent[i].style.display = "none";
+            }
+            target.style.display = "block";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function toggleMenu() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        window.onload = function() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('theme-icon').classList.remove('fa-moon');
+                document.getElementById('theme-icon').classList.add('fa-sun');
+            }
+        }
+    </script>
+</body>
+</html>
